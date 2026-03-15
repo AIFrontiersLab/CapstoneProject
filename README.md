@@ -267,7 +267,7 @@ CapstoneProject/
 
 ## 🖥️ Frontend overview
 
-- **Stack**: React 18, TypeScript, Vite, Tailwind (DM Sans, JetBrains Mono).
+- **Stack**: React 18, TypeScript, Vite, Tailwind (DM Sans, JetBrains Mono). HTTPS in development: **@vitejs/plugin-basic-ssl@1**.
 - **Pages**: **Upload** (drag-and-drop), **Documents** (list + status), **Ask** (question + RAG vs agent toggle).
 - **Answer panel**: Answer text, sources/citations, execution summary (for agent), retrieved chunks accordion.
 
@@ -285,10 +285,13 @@ CapstoneProject/
 
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate
+install --upgrade pip
+if above failed then : /Users/xxxx/Workspace/Innovation/CapstoneProject/.venv/bin/python3 -m pip 
 pip install -r requirements.txt
-cp ../.env.example .env    # Replace OPENAI_API_KEY=xxx with your key to enable LLM
+
+cp ../.env.example .env   # set OPENAI_API_KEY or USE_LOCAL_EMBEDDINGS=true
 mkdir -p data/uploads data/chroma
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
@@ -301,10 +304,49 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```bash
 cd frontend
 npm install
-npm run dev
 ```
 
-- App: http://localhost:3000 (proxies `/api` to backend)
+Add the app host to `/etc/hosts` (required for the frontend):
+
+```bash
+sudo vi /etc/hosts
+```
+
+Add this line at the end of the file:
+
+```
+127.0.0.1   capstone.genai-rag.edureka.co
+```
+
+Save the file (in vi: press `Esc`, type `:wq`, press `Enter`).
+
+Start the application (port 443 requires elevated privileges):
+
+```bash
+sudo npm run dev
+```
+
+- App: **https://capstone.genai-rag.edureka.co** (proxies `/api` to backend).
+
+**"Your connection is not private" (NET::ERR_CERT_AUTHORITY_INVALID):** The dev server uses a self-signed certificate. For local development, click **"Advanced"** → **"Proceed to capstone.genai-rag.edureka.co (unsafe)"**. Only do this on your own machine.
+
+**If you get `vite: command not found` when using sudo**, preserve your PATH:
+
+```bash
+sudo env "PATH=$PATH" npm run dev
+```
+
+**If you get an npm permission error**, fix ownership of your npm cache:
+
+```bash
+sudo chown -R $(id -u):$(id -g) "$HOME/.npm"
+```
+
+Or if the error shows a path like `/Users/xxx/.npm`, run (replace `xxx` with your username):
+
+```bash
+sudo chown -R 501:20 "/Users/xxx/.npm"
+```
 
 ### 3. Use the app
 
@@ -341,7 +383,7 @@ docker compose up --build
 ```
 
 - Backend: http://localhost:8000  
-- Frontend: http://localhost:3000  
+- Frontend: https://capstone.genai-rag.edureka.co (or http://localhost:3000 when not using local HTTPS)  
 - Data: `rag_data` volume
 
 ---
