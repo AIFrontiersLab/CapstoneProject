@@ -2,6 +2,8 @@
 
 This folder contains the **complex architecture diagrams** for the Enterprise GenAI Document Q&A system (Capstone). The diagrams are written in [Mermaid](https://mermaid.js.org/) and render in GitHub, GitLab, and most Markdown viewers.
 
+The **agent path** is implemented as a **LangChain-style multi-agent pipeline**: **Planner** (planning and safety) → **Retriever** → **Reasoner** (LangChain core messages + shared BaseChatModel) → **Validator**. **Planning** produces a `Plan` (`needs_retrieval`, `planned_query`) that drives whether retrieval runs and what query is sent to the vector store; the orchestrator returns an execution summary (planned query, chunks retrieved, validation result). See [Architecture](../architecture.md) for the full narrative on LangChain agents and planning.
+
 ---
 
 ## 1. System Context (High-Level)
@@ -377,6 +379,19 @@ flowchart TB
     RAG --> Col
     Ret --> Col
 ```
+
+---
+
+## LangChain agents and planning (reference)
+
+| Agent | Role | Planning / outputs |
+|-------|------|--------------------|
+| **PlannerAgent** | Safety check; decide if retrieval needed; normalize question | **Plan**: `needs_retrieval`, `planned_query`, `reasoning_summary`, `error` |
+| **RetrieverAgent** | Vector search with `planned_query` | Top-k `(DocumentChunk, score)` |
+| **ReasonerAgent** | Build context; LangChain core (SystemMessage, HumanMessage) + BaseChatModel; synthesize answer | Answer text |
+| **ValidatorAgent** | Check grounding and citations | **ValidationResult**: `passed`, `support_status`, `summary`, `issues` |
+
+The **orchestrator** runs these in sequence and returns **AgentQueryResponse** with **execution_summary** (planned query, retrieval performed, chunks count, validation passed, step summaries).
 
 ---
 

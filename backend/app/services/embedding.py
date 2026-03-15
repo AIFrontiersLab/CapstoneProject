@@ -22,6 +22,11 @@ class EmbeddingProvider(ABC):
         """Embed a single query string."""
         pass
 
+    def embedding_dimension(self) -> int:
+        """Return the dimension of vectors produced by this provider (e.g. 384 or 1536)."""
+        v = self.embed_query("x")
+        return len(v) if v else 0
+
 
 class OpenAIEmbeddingProvider(EmbeddingProvider):
     """OpenAI (or compatible API) embeddings."""
@@ -110,6 +115,10 @@ class EmbeddingService:
 
     def embed_query(self, text: str) -> List[float]:
         return self._provider.embed_query(text)
+
+    def embedding_dimension(self) -> int:
+        """Dimension of vectors (e.g. 384 for local, 1536 for OpenAI text-embedding-3-small)."""
+        return self._provider.embedding_dimension()
 
 
 _embedding_service: Optional[EmbeddingService] = None

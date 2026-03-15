@@ -22,9 +22,10 @@
 | **Document ingestion** | Upload PDF, TXT, CSV, Excel (.xlsx); automatic parsing, chunking, embedding, and indexing |
 | **Semantic search** | Vector similarity search over chunk embeddings (ChromaDB) |
 | **RAG pipeline** | Retrieve top-k chunks → build prompt → LLM answer with citations |
-| **Agent workflow** | Planner, Retriever, Reasoner, Validator with execution summary |
+| **LangChain agents** | Multi-agent workflow: **Planner** (planning & safety) → **Retriever** → **Reasoner** (LangChain core + LLM) → **Validator**; execution summary and citations |
+| **Planning** | Planner decides if retrieval is needed and produces a normalized `planned_query`; plan drives retrieval and reasoning |
 | **Safety** | File validation, size limits, prompt-injection mitigation, “insufficient evidence” fallback |
-| **Stack** | FastAPI backend · React + Vite + Tailwind frontend |
+| **Stack** | FastAPI backend · React + Vite + Tailwind · LangChain core (agents, messages, BaseChatModel) |
 
 ---
 
@@ -102,11 +103,23 @@ flowchart TB
     P1 --> R[RetrieverAgent]
     R --> R1[vector_store.search → Top-k chunks]
     R1 --> Reas[ReasonerAgent]
-    Reas --> Re1[Build context → LangChain ChatOpenAI → Answer]
+    Reas --> Re1[Build context → LangChain core + LLM → Answer]
     Re1 --> V[ValidatorAgent]
     V --> V1[Check citations · Support status · ValidationResult]
     V1 --> Response[AgentQueryResponse + execution_summary]
 ```
+
+### LangChain agents and planning
+
+The **agent path** uses a structured multi-agent pipeline built with **LangChain** patterns:
+
+- **Agent structure** — Four agents run in sequence:
+  1. **Planner** — Interprets the question, runs a safety check, and produces a **plan** (`needs_retrieval`, `planned_query`). Planning determines whether to run retrieval and what query to send to the vector store.
+  2. **Retriever** — Runs vector search with the planned query and returns top-k chunks with scores.
+  3. **Reasoner** — Uses **LangChain core** (`langchain_core.messages` + shared `BaseChatModel`) to build a system/user prompt and synthesize an answer from the retrieved context.
+  4. **Validator** — Checks that the answer is grounded in the chunks and has citations; sets `support_status` and an execution summary.
+
+- **Planning** — The `Plan` from the Planner includes `planned_query` (normalized question) and `needs_retrieval`. The orchestrator only calls Retriever and Reasoner when `needs_retrieval` is true; otherwise it returns early with a clear message. The frontend receives an **execution summary** (planned query, chunks retrieved, validation result) for transparency.
 
 **More diagrams** (layered view, ingestion sequence, backend dependencies, data stores): **[docs/architecture/architecture-diagram.md](docs/architecture/architecture-diagram.md)**
 

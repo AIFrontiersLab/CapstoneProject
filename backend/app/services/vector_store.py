@@ -10,7 +10,7 @@ from app.services.embedding import get_embedding_service
 
 logger = get_logger(__name__)
 
-COLLECTION_NAME = "enterprise_rag_chunks"
+COLLECTION_NAME_PREFIX = "enterprise_rag_chunks"
 
 
 class VectorStoreService:
@@ -22,6 +22,7 @@ class VectorStoreService:
         self._client = None
         self._collection = None
         self._embedding = get_embedding_service()
+        self._collection_name: Optional[str] = None
         self.top_k = settings.top_k_retrieve
         self.min_score = settings.min_relevance_score
 
@@ -35,13 +36,22 @@ class VectorStoreService:
             )
         return self._client
 
+    def _get_collection_name(self) -> str:
+        """Collection name includes embedding dimension so 384 vs 1536 never mix."""
+        if self._collection_name is None:
+            dim = self._embedding.embedding_dimension()
+            self._collection_name = f"{COLLECTION_NAME_PREFIX}_{dim}" if dim else COLLECTION_NAME_PREFIX
+        return self._collection_name
+
     def _get_collection(self):
         if self._collection is None:
             client = self._get_client()
+            name = self._get_collection_name()
             self._collection = client.get_or_create_collection(
-                name=COLLECTION_NAME,
+                name=name,
                 metadata={"description": "RAG document chunks"},
             )
+            logger.info("vector_store_collection", name=name)
         return self._collection
 
     def add_chunks(
