@@ -4,12 +4,33 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
-from pydantic import Field, field_validator
+from dotenv import load_dotenv
+from pydantic import Field, model_validator, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Resolve .env relative to backend project root (parent of app/) so it's always found
 _BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent
 _ENV_FILE = _BACKEND_ROOT / ".env"
+# Load .env into os.environ (override=True so .env wins over empty shell OPENAI_API_KEY)
+load_dotenv(_ENV_FILE, override=True)
+
+
+def _read_api_key_from_env_file() -> Optional[str]:
+    """Read OPENAI_API_KEY directly from backend/.env if present."""
+    if not _ENV_FILE.exists():
+        return None
+    try:
+        for line in _ENV_FILE.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.startswith("OPENAI_API_KEY=") and not line.startswith("#"):
+                value = line.split("=", 1)[1].strip().strip('"').strip("'")
+                if value and value.lower() not in ("xxx", "your-api-key", "your_key_here"):
+                    if not value.lower().startswith(("sk-your-", "sk-placeholder")):
+                        return value
+                return None
+    except Exception:
+        pass
+    return None
 
 
 class Settings(BaseSettings):
@@ -51,11 +72,23 @@ class Settings(BaseSettings):
         if not v or not v.strip():
             return None
         v = v.strip()
-        # Treat placeholders as no key so app runs with LLM disabled until user sets a real key
-        placeholders = ("sk-your-", "sk-placeholder", "your-api-key", "your_key_here", "xxx")
-        if any(p in v.lower() for p in placeholders):
+        # Treat only obvious placeholders as no key (exact or prefix), so real keys are accepted
+        lower = v.lower()
+        if lower == "xxx" or lower.startswith("sk-your-") or lower.startswith("sk-placeholder"):
+            return None
+        if lower in ("your-api-key", "your_key_here"):
             return None
         return v
+
+    @model_validator(mode="after")
+    def fallback_api_key_from_file(self) -> "Settings":
+        """If OPENAI_API_KEY is still missing, read it directly from backend/.env."""
+        if self.openai_api_key is None:
+            key = _read_api_key_from_env_file()
+            if key:
+                object.__setattr__(self, "openai_api_key", key)
+        return self
+
     llm_model: str = Field(default="gpt-4o-mini", alias="LLM_MODEL")
     embedding_model: str = Field(default="text-embedding-3-small", alias="EMBEDDING_MODEL")
 

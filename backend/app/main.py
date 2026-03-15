@@ -2,6 +2,7 @@
 
 from contextlib import asynccontextmanager
 
+import structlog
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -15,6 +16,12 @@ async def lifespan(app: FastAPI):
     """Ensure data dirs exist on startup."""
     settings = get_settings()
     settings.ensure_dirs()
+    if settings.openai_api_key:
+        structlog.get_logger("app.main").info("OPENAI_API_KEY is set", llm_enabled=True)
+    else:
+        structlog.get_logger("app.main").warning(
+            "OPENAI_API_KEY is not set; LLM/answers will be disabled. Set it in backend/.env and restart."
+        )
     yield
     # Shutdown if needed
     pass
