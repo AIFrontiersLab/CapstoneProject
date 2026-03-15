@@ -348,9 +348,15 @@ Or if the error shows a path like `/Users/xxx/.npm`, run (replace `xxx` with you
 sudo chown -R 501:20 "/Users/xxx/.npm"
 ```
 
+**Next: upload sample data and test**
+
+1. Open **https://capstone.genai-rag.edureka.co** and go to the **Upload** page.
+2. Upload the sample files from the project’s **`data_to_upload/`** folder (e.g. `enterprise_ai_strategy_2026.txt`, `ai_governance_policy.txt`, `cloud_costs.csv`, `support_tickets.csv`, `system_architecture.txt`, and any Excel files). Wait for ingestion to complete (status **completed** on the Documents page).
+3. Go to the **Ask** page and try the example questions from **Supported document types and example questions** and **Example complex questions for RAG + agents** above (e.g. “What are the strategic pillars of Orion’s AI strategy?”, “How does Orion ensure responsible use of AI according to their strategy and governance documents?”). Toggle **“Use agent workflow”** on for the multi-document agent questions.
+
 ### 3. Use the app
 
-1. **Upload**: Go to **Upload**, drop a PDF/TXT/CSV/XLSX file (see `sample_data/` for examples).
+1. **Upload**: Go to **Upload**, drop a PDF/TXT/CSV/XLSX file (see `data_to_upload/` for sample files).
 2. **Ask**: Go to **Ask**, type a question, optionally enable **“Use agent workflow”**, and click **Ask**.
 3. **Documents**: View the list of uploaded files and their status.
 
