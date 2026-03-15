@@ -1,0 +1,40 @@
+# Enterprise GenAI Document Q&A - Backend Dependencies
+# Python 3.11+
+
+# Web framework
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+
+# Validation & config
+pydantic==2.6.1
+pydantic-settings==2.1.0
+
+# Document parsing
+pypdf==4.0.1
+pdfplumber==0.10.4
+pandas==2.2.0
+openpyxl==3.1.2
+
+# LLM & embeddings (OpenAI-compatible); core LangChain for agents/RAG
+openai==1.12.0
+langchain-core>=0.1.0,<0.3
+langchain>=0.1.9
+langchain-openai>=0.0.6
+langchain-community>=0.0.24
+
+# Vector store
+chromadb==0.4.22
+sentence-transformers==2.3.1
+
+# Utilities
+python-multipart==0.0.9
+python-dotenv==1.0.1
+httpx==0.26.0
+tenacity==8.2.3
+structlog==24.1.0
+
+# Testing
+
+pytest>=7.0.0,<8
+pytest-asyncio==0.23.4
+pytest-cov==4.1.0

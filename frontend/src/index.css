@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100vh;
+    margin: 0;
+  }
+  body {
+    @apply text-zinc-800 font-sans antialiased;
+  }
+}
+
+/* App shell - single background behind content */
+.app-shell {
+  min-height: 100vh;
+  position: relative;
+  isolation: isolate;
+}
+/* Full-page background: z-index -1, all the way down, opaque */
+.app-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background-color: #ffffff;
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+/* Ensure all content sits above the background */
+.app-shell > header,
+.app-shell > main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Light card surfaces */
+@layer components {
+  .surface-card {
+    @apply rounded-2xl shadow-xl shadow-slate-200/80;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  }
+  .glass-panel {
+    @apply rounded-2xl shadow-lg shadow-slate-200/60;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  }
+  .btn-primary {
+    @apply px-5 py-2.5 rounded-xl font-medium text-white;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+    transition: background-position 0.4s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-position: 100% 50%;
+    box-shadow: 0 6px 24px rgba(139, 92, 246, 0.45);
+    transform: translateY(-2px);
+  }
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+}
+
+/* Scrollbar - light theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-slate-300;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
+}
