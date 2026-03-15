@@ -9,7 +9,7 @@ cd backend
 python -m venv .venv
 source .venv/bin/activate   # or .venv\Scripts\activate on Windows
 pip install -r requirements.txt
-cp ../.env.example .env    # edit .env and set OPENAI_API_KEY if needed
+cp ../.env.example .env    # set OPENAI_API_KEY as per the instruction
 mkdir -p data/uploads data/chroma
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```

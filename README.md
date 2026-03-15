@@ -301,11 +301,11 @@ Save the file (in vi: press `Esc`, type `:wq`, press `Enter`).
 cd backend
 python3 -m venv .venv
 source .venv/bin/activate
-install --upgrade pip
+python3 -m pip install --upgrade pip
 if above failed then : /Users/xxxx/Workspace/Innovation/CapstoneProject/.venv/bin/python3 -m pip 
 pip install -r requirements.txt
 
-cp ../.env.example .env   # set OPENAI_API_KEY or USE_LOCAL_EMBEDDINGS=true
+cp ../.env.example .env   # set OPENAI_API_KEY as per the instruction
 mkdir -p data/uploads data/chroma
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
