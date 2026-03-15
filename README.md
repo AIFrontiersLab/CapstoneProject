@@ -9,7 +9,7 @@
 [![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black)](https://reactjs.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-*A production-style application for uploading enterprise documents and asking natural language questions—powered by **RAG**, **ChromaDB**, and an **agent workflow** (Planner → Retriever → Reasoner → Validator).*
+*A fully production and enterprise app for uploading documents and asking natural language questions—powered by **RAG**, **ChromaDB**, and an **agent workflow** (Planner → Retriever → Reasoner → Validator).*
 
 </div>
 
@@ -281,6 +281,20 @@ CapstoneProject/
 - Node 18+
 - (Optional) Docker
 
+Add the app host to `/etc/hosts` (required for the frontend) **before starting the backend**:
+
+```bash
+sudo vi /etc/hosts
+```
+
+Add this line at the end of the file:
+
+```
+127.0.0.1   capstone.genai-rag.edureka.co
+```
+
+Save the file (in vi: press `Esc`, type `:wq`, press `Enter`).
+
 ### 1. Backend
 
 ```bash
@@ -296,8 +310,8 @@ mkdir -p data/uploads data/chroma
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-- API: http://localhost:8000  
-- Swagger: http://localhost:8000/docs  
+- API: http://capstone.genai-rag.edureka.co:8080 or http://localhost:8000
+- Swagger: http://capstone.genai-rag.edureka.co:8080/docs or http://localhost:8000/docs
 
 ### 2. Frontend
 
@@ -305,20 +319,6 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 cd frontend
 npm install
 ```
-
-Add the app host to `/etc/hosts` (required for the frontend):
-
-```bash
-sudo vi /etc/hosts
-```
-
-Add this line at the end of the file:
-
-```
-127.0.0.1   capstone.genai-rag.edureka.co
-```
-
-Save the file (in vi: press `Esc`, type `:wq`, press `Enter`).
 
 Start the application (port 443 requires elevated privileges):
 
