@@ -1,0 +1,21 @@
+Orion Technologies System Architecture Overview
+
+Core Components
+
+Data Ingestion Layer
+Responsible for collecting enterprise data from operational systems including CRM, ERP, and IoT platforms.
+
+Data Lake
+Central storage repository built on cloud object storage.
+
+Feature Store
+Stores curated machine learning features used across multiple AI models.
+
+Model Serving Layer
+Provides real-time inference APIs for AI applications.
+
+Monitoring Layer
+Tracks model performance, drift detection, and system reliability.
+
+Security Controls
+All services must authenticate using OAuth 2.0 and support encrypted communication using TLS.

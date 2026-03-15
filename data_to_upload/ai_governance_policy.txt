@@ -1,0 +1,32 @@
+AI Governance Policy - Orion Technologies
+
+Purpose
+The AI Governance framework ensures that AI systems are designed and deployed responsibly.
+
+Key Principles
+
+Transparency
+AI systems must provide explanations for automated decisions affecting customers.
+
+Accountability
+Each AI system must have an assigned system owner responsible for its performance and compliance.
+
+Bias Monitoring
+AI models must be periodically audited for bias across protected demographic groups.
+
+Human Oversight
+Critical business decisions must include a human-in-the-loop review mechanism.
+
+Data Governance Integration
+AI systems must only use approved datasets managed under the Enterprise Data Governance Program.
+
+Risk Categories
+
+Low Risk
+Internal automation tools.
+
+Medium Risk
+AI systems assisting employees in decision making.
+
+High Risk
+Customer-facing systems impacting financial or legal outcomes.

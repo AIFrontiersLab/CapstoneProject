@@ -1,0 +1,67 @@
+# ----- Dependencies -----
+# npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ----- Environment & secrets -----
+.env
+.env.local
+.env.*.local
+*.pem
+
+# ----- Backend runtime data -----
+backend/data/
+backend/*.db
+backend/*.sqlite
+*.sqlite3
+
+# ----- Frontend build -----
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+
+# ----- IDE & OS -----
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ----- Logs & temp -----
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# ----- Optional: keep sample_data tracked; uncomment to ignore -----
+# sample_data/

@@ -1,0 +1,34 @@
+# Enterprise GenAI Document Q&A - Local run
+# Backend + Frontend + persistent data
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - UPLOAD_DIR=/data/uploads
+      - CHROMA_PERSIST_DIR=/data/chroma
+      - SQLITE_PATH=/data/metadata.db
+    volumes:
+      - rag_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  rag_data:

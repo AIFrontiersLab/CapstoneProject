@@ -1,0 +1,7 @@
+ticket_id,issue_category,priority,status,resolution_time_hours
+101,Login Failure,High,Resolved,4
+102,Billing Error,Medium,Resolved,12
+103,AI Chatbot Misresponse,High,Open,0
+104,Password Reset,Low,Resolved,1
+105,API Timeout,High,Resolved,6
+106,Data Sync Failure,Medium,Open,0

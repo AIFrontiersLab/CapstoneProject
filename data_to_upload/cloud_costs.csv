@@ -1,0 +1,10 @@
+month,service,region,cost_usd
+Jan,Compute,us-east-1,45000
+Jan,Storage,us-east-1,15000
+Jan,AI Training,us-west-2,60000
+Feb,Compute,us-east-1,47000
+Feb,Storage,us-east-1,16000
+Feb,AI Training,us-west-2,75000
+Mar,Compute,us-east-1,52000
+Mar,Storage,us-east-1,17000
+Mar,AI Training,us-west-2,82000
